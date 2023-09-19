@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+<h1 class="titre-ajouter-article">Ajouter un nouvel Article </h1>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="list-group border rounded" >
+                
+
+                <select name="marque" id="marques" 
+                onchange="getType(selectMarque,requete) ;        
+                activate(selectMarque,selectTypes);activate(selectMarque,selectModels)"
+                class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner une marque</option>
+                </select>
+                <br>
+                <select name="type" id="types" class="list-group-item form-select-lg rounded"
+                onchange="getModel(selectModels,selectTypes,requete);activate(selectTypes,selectModels)">
+                    <option value="">Veuillez selectionner un type</option>
+                </select>
+                <br>
+                <select name="model" id="models" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner un model</option>
+                </select>
+                <br>
+                <select name="catégorie" id="catégories" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner une catégorie</option>
+                </select>
+                <br>
+                <select name="couleur" id="couleur" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner une couleur</option>
+                </select>
+                <br>
+                <select name="qualité" id="qualité" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner la qualité</option>
+                </select>
+                <br>
+                <select name="quantité" id="quantité" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner la disponibilité</option>
+                </select>
+                <br>
+                <select name="prix" id="prix" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez selectionner le prix</option>
+                </select>
+                <br>
+                <input name="image" id="image" type="file" class="list-group-item form-select-lg rounded">
+                    <option value="">Veuillez choisir une image</option>
+                </select>
+                <br>
+                <input id="description"name="description" type='text' placeholder="Veuillez saisir une description" id=""
+                    class="col-6 list-group-item form-select-lg rounded">
+                </input>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-primary col-6">Ajouter</button>
+        
+            </div>
+           
+        </div>
+
+    </div>
+
+
+<script>
+    var requete = new XMLHttpRequest;
+    var selectMarque = document.getElementById('marques');
+    var selectModels = document.getElementById('models')
+    var selectTypes = document.getElementById('types');
+    var selectQualite = document.getElementById('qualité');
+    var selectCouleur = document.getElementById('couleur');
+    var selectCategorie = document.getElementById('catégories')
+
+
+    function xmlGet(url, requete) {
+        requete.open("GET", url, true)
+        requete.send();
+    };
+
+    function xmlPost(url, valeur) {
+        requete.open("POST", url, true);
+        requete.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        requete.send("valeur=" + valeur);
+    }
+
+    function createOptionEmpty(select, valeur) {
+        var option = document.createElement("option");
+        option.text = "Veuillez renseigner" + valeur;
+        option.value = "";
+        option.name = "";
+        select.add(option)
+    }
+
+    function createOption(reponse, select) {
+
+        for (i = 0; i < reponse.length; i++) {
+
+
+            var option = document.createElement("option");
+            // le contenu text de chaque option créée = nom de l'objet
+            option.text = reponse[i].nom
+            option.value = reponse[i].nom
+            option.name = reponse[i].nom
+            select.add(option)
+        }
+    }
+
+    function emptySelect(select) {
+        select.length = null;
+
+    }
+
+    function activate(select1, select2) {
+        var valeur = select1[select1.options.selectedIndex].value;
+        console.log(valeur)
+        if (valeur === "")
+
+            select2.disabled = true
+        else select2.disabled = false
+
+    }
+    createOptionEmpty(selectMarque, " la marque")
+
+    //initialiser la variable reponse 
+    //declarer la requete 
+    function getMarque(requete, selectMarque) {
+        url = "requetes/getMarque.php";
+        xmlGet(url, requete)
+
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4) {
+                var reponse = JSON.parse(requete.response);
+                console.log(reponse)
+                createOption(reponse, selectMarque)
+            }
+        }
+    }
+
+    getMarque(requete, selectMarque);
+
+
+    function getType(selectMarque, requete)
+
+    //appelée lorsqu'il y a un changement sur le selct , permet de recuperer la valeur selectionnée et l'envoyer l'envoyer en post a la page getType.php
+    {
+        //valeur = marque selectionnée
+
+        var index = selectMarque.options.selectedIndex; //recuperer index de la valeur selectionnée sur le tableau
+        var valeur = selectMarque[index].value; //recupere la valeur selectionnée dans le tableau grace a l'index 
+        var url = "requetes/getType.php"
+        xmlPost(url, valeur)
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4 && requete.status == 200 && valeur != "") {
+                var reponseType = JSON.parse(requete.response);
+                console.log(reponseType);
+                emptySelect(selectTypes)
+                createOptionEmpty(selectTypes, " le type")
+                createOption(reponseType, selectTypes)
+
+            }
+
+        }
+
+    }
+
+
+
+    function getModel(selectModels, selectTypes, requete) {
+
+        var index = selectTypes.options.selectedIndex; //recuperer index de la valeur selectionnée sur le tableau
+        var valeur = selectTypes[index].value;
+
+        var url = "requetes/getModel.php";
+        xmlPost(url, valeur);
+
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4 && requete.status == 200 && valeur != "") {
+                console.log(valeur);
+                var reponseModel = JSON.parse(requete.response);
+                console.log(reponseModel);
+
+                emptySelect(selectModels)
+                createOptionEmpty(selectModels, " le model")
+                createOption(reponseModel, selectModels)
+            }
+        }
+    }
+
+
+    function getQualité() {
+        var url = 'requetes/getQualite.php';
+        var requete = new XMLHttpRequest();
+        requete.open("GET", url, true)
+        requete.send();
+
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4) {
+                var reponse = JSON.parse(requete.response);
+                for (i = 0; i < reponse.length; i++) {
+                    var option = document.createElement('option');
+                    option.text = reponse[i].qualite
+                    option.value = reponse[i].qualite
+                    option.name = reponse[i].qualite
+                    selectQualite.add(option)
+
+                }
+            }
+
+        }
+    }
+    getQualité()
+
+
+    function getCouleur() {
+        var url = 'requetes/getCouleur.php';
+        var requete = new XMLHttpRequest();
+        requete.open("GET", url, true)
+        requete.send();
+
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4) {
+                var reponse = JSON.parse(requete.response);
+                for (i = 0; i < reponse.length; i++) {
+                    var option = document.createElement('option');
+                    option.text = reponse[i].couleur
+                    option.value = reponse[i].couleur
+                    option.name = reponse[i].couleur
+                    selectCouleur.add(option)
+
+                }
+            }
+
+        }
+
+    }
+    getCouleur();
+
+    function getCategorie() {
+        var url = 'requetes/getCategorie.php';
+        var requete = new XMLHttpRequest();
+        requete.open("GET", url, true)
+        requete.send();
+
+        requete.onreadystatechange = function() {
+            if (requete.readyState === 4) {
+                var reponse = JSON.parse(requete.response);
+                createOption(reponse, selectCategorie)
+            }
+
+        }
+    }
+    getCategorie()
+</script>
+</body>
+
+</html>
