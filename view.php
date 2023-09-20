@@ -2,7 +2,7 @@
 
     use function PHPSTORM_META\type;
 
-    require_once './header.php';
+    require_once 'header.php';
 
     ?>
 

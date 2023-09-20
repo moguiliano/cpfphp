@@ -97,7 +97,8 @@ require_once './admin/libraries/utils.php';
                     </svg>
 
                     Panier
-                    <span class="badge badge-danger"><?=array_sum($_SESSION['panier'])?></span>
+                  
+                    <span class="badge badge-danger"></span>
 
                 </a>
                 <a class="nav-link" href="connexion.php">

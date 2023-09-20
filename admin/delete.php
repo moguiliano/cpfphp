@@ -42,6 +42,6 @@ if(!empty($_POST))
 </body>
 <?php
 
- require_once  'footer.php';
+ require_once  '../footer.php';
  ?>
 
